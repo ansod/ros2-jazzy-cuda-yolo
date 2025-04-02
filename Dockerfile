@@ -46,7 +46,6 @@ SHELL ["/bin/bash", "-c"]
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && colcon build --symlink-install
 
 COPY test_image.png image.png
-#COPY inference.py inference.py
 COPY entrypoint.sh entrypoint.sh
 
 RUN chmod +x entrypoint.sh

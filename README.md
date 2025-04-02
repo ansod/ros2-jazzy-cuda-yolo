@@ -13,9 +13,15 @@ Run docker container that tests inference:
 
 If on ARM system (install [Nvidia container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html))
 ```bash
-docker run --rm --runtime nvidia test_inference
+docker run --runtime nvidia --name test_inference test_inference
 ```
 or if on x86 system
 ```bash
-docker run --rm --gpus all test_inference
+docker run --gpus all --name test_inference test_inference
+```
+
+Copy result image from container to view result:
+```bash
+docker cp test_inference:/ws/result.png result.png
+open result.png
 ```

@@ -16,8 +16,21 @@ class InferenceNode(Node):
         self.model = YOLO('yolov8n.pt').to('cuda')
 
     def inference_callback(self, request, response):
-        img_path = cv.imread('/ws/image.png')
-        _ = self.model(img_path)
+        img = cv.imread('/ws/image.png')
+        results = self.model(img)
+        for r in results:
+            for box in r.boxes:
+
+                coordinates = (box.xyxy).tolist()[0]
+                label = results[0].names[int(box.cls)]
+
+                left, top, right, bottom = int(coordinates[0]), int(coordinates[1]), int(coordinates[2]), int(coordinates[3])
+
+                cv.rectangle(img, (left, top), (right, bottom), (255, 0, 0), 2)
+                cv.putText(img, label, (right + 5, (top + bottom) // 2), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+
+        cv.imwrite('/ws/result.png', img)
+
         return response
 
 
