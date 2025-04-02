@@ -25,3 +25,7 @@ Copy result image from container to view result:
 docker cp test_inference:/ws/result.png result.png
 open result.png
 ```
+
+This should show the follwing image.
+
+![Inference result](result.png)
