@@ -29,12 +29,26 @@ RUN add-apt-repository universe \
     ros-${ROS_DISTRO}-ros-base \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install --force-reinstall colcon-core \
+    && rm -rf /root/.cache/pip
+RUN pip install colcon-common-extensions \
+    && rm -rf /root/.cache/pip
+RUN pip install empy==3.3.4 lark catkin_pkg \
+    && rm -rf /root/.cache/pip
+
+# Build and install packages
+RUN mkdir -p /ws/install
+RUN mkdir -p /ws/build
+
+COPY src/inference /ws/src/inference
+WORKDIR /ws
+SHELL ["/bin/bash", "-c"]
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash && colcon build --symlink-install
+
 COPY test_image.png image.png
-COPY inference.py inference.py
+#COPY inference.py inference.py
 COPY entrypoint.sh entrypoint.sh
 
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT [ "./entrypoint.sh" ]
-
-CMD ["python3", "inference.py"]
