@@ -7,7 +7,6 @@ RUN apt update && apt install -y --no-install-recommends \
     python3-venv \
     python3-opencv \
     software-properties-common \
-    sudo \
     curl \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
@@ -29,12 +28,8 @@ RUN add-apt-repository universe \
     ros-${ROS_DISTRO}-ros-base \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --force-reinstall colcon-core \
-    && rm -rf /root/.cache/pip
-RUN pip install colcon-common-extensions \
-    && rm -rf /root/.cache/pip
-RUN pip install empy==3.3.4 lark catkin_pkg \
-    && rm -rf /root/.cache/pip
+RUN pip install --force-reinstall colcon-core && rm -rf /root/.cache/pip
+RUN pip install colcon-common-extensions && rm -rf /root/.cache/pip
 
 # Build and install packages
 RUN mkdir -p /ws/install
@@ -46,8 +41,8 @@ SHELL ["/bin/bash", "-c"]
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && colcon build --symlink-install
 
 COPY test_image.png image.png
-COPY entrypoint.sh entrypoint.sh
+COPY run_inference.sh run_inference.sh
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x run_inference.sh
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "./run_inference.sh" ]
